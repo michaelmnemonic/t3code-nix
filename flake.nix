@@ -18,6 +18,7 @@
         t3code-desktop = final.t3code;
         t3code-cli = final.callPackage ./package-cli.nix { };
         t3 = final.t3code-cli;
+        t3code-opencode = final.t3code.override { codexSupport = false; };
       };
       mkApp = drv: binary: {
         type = "app";
@@ -41,6 +42,7 @@
             t3code-desktop = pkgs.t3code-desktop;
             t3code-cli = pkgs.t3code-cli;
             t3 = pkgs.t3;
+            t3code-opencode = pkgs.t3code-opencode;
           };
 
           apps = {
@@ -49,6 +51,7 @@
             t3code-desktop = mkApp pkgs.t3code-desktop "t3code";
             t3code-cli = mkApp pkgs.t3code-cli "t3";
             t3 = mkApp pkgs.t3 "t3";
+            t3code-opencode = mkApp pkgs.t3code-opencode "t3code";
           };
 
           checks = {

@@ -7,9 +7,17 @@
 , unzip
 , codexSupport ? true
 , codex
+, opencodeSupport ? true
+, opencode
 }:
 
 let
+  extraBinPath = lib.makeBinPath
+    ([]
+      ++ lib.optionals codexSupport [ codex ]
+      ++ lib.optionals opencodeSupport [ opencode ]
+    );
+
   pname = "t3code";
   version = "0.0.25";
   linuxHash = "sha256-aO1gFdYRs/9kvT8/1W4/v5e8os9E7rJl46BTK9SUglI=";
@@ -75,8 +83,8 @@ let
           wrapProgram "$out/bin/${pname}" \
             --set CHROME_DESKTOP "$desktop_basename" \
             --prefix XDG_DATA_DIRS : "$out/share" \
-            ${lib.optionalString codexSupport ''
-              --prefix PATH : "${lib.makeBinPath [ codex ]}"
+            ${lib.optionalString (codexSupport || opencodeSupport) ''
+              --prefix PATH : "${extraBinPath}"
             ''}
         fi
 
@@ -127,8 +135,8 @@ let
       makeWrapper \
         "$out/Applications/${darwinAppName}/Contents/MacOS/${darwinExecutable}" \
         "$out/bin/${pname}" \
-        ${lib.optionalString codexSupport ''
-          --prefix PATH : "${lib.makeBinPath [ codex ]}"
+        ${lib.optionalString (codexSupport || opencodeSupport) ''
+          --prefix PATH : "${extraBinPath}"
         ''}
 
       runHook postInstall

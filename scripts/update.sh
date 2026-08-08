@@ -136,6 +136,16 @@ write_upstream_cli_package_files() {
   log "generating package-lock.json for ${version}"
   (
     cd "$tmpdir/package"
+    # package-cli.nix strips the upstream "overrides" field before building, because
+    # some selector-style overrides (e.g. "@clerk/clerk-js>@base-org/account") are
+    # rejected by npm with EINVALIDPACKAGENAME. Generate the lockfile from the same
+    # stripped package.json so the vendored lockfile matches what gets built.
+    node -e '
+      const fs = require("fs");
+      const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+      delete pkg.overrides;
+      fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2) + "\n");
+    '
     npm install --package-lock-only --ignore-scripts >/dev/null
   )
   cp "$tmpdir/package/package-lock.json" npm/package-lock.json

@@ -6,9 +6,17 @@
 , nodejs_22
 , codexSupport ? true
 , codex
+, opencodeSupport ? true
+, opencode
 }:
 
 let
+  extraBinPath = lib.makeBinPath
+    ([]
+      ++ lib.optionals codexSupport [ codex ]
+      ++ lib.optionals opencodeSupport [ opencode ]
+    );
+
   packageJson = lib.importJSON ./npm/package.json;
   packageJsonForNpm = builtins.removeAttrs packageJson [ "overrides" ];
   packageLockJson = lib.importJSON ./npm/package-lock.json;
@@ -99,8 +107,8 @@ buildNpmPackage rec {
 
     makeWrapper ${nodejs_22}/bin/node $out/bin/t3 \
       --add-flags "$out/lib/node_modules/t3/${binPath}" \
-      ${lib.optionalString codexSupport ''
-        --prefix PATH : "${lib.makeBinPath [ codex ]}"
+      ${lib.optionalString (codexSupport || opencodeSupport) ''
+        --prefix PATH : "${extraBinPath}"
       ''}
 
     runHook postInstall

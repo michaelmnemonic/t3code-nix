@@ -11,8 +11,8 @@
 
 let
   pname = "t3code";
-  version = "0.0.32";
-  linuxHash = "sha256-SS7ctI7vlzCfNMS3CoEhuGfDronCBowuKLs5Oo2CLCI=";
+  version = "0.0.33";
+  linuxHash = "sha256-QVyGSPQ8PSLVcvJ/LFD9yMMQ6n/N6VN7kD4eLxyHdaE=";
   darwinX64Hash = "sha256-wVMw/wdAhsXbz6kI2xqo93sf1bj3cy7LvIIaL2O0v84=";
   darwinArm64Hash = "sha256-rwdoMn7szpRJfV681IlTFjX3P8WKJgk19KXYXAtZHTI=";
 
